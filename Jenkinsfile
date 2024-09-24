@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Clone repository') {
             steps {
-                git 'https://github.com/fiermarin2/test-jenkins'
+                git branch: 'main', url: 'https://github.com/fiermarin2/test-jenkins'
             }
         }
         stage('Build Docker container') {
