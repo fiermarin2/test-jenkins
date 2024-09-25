@@ -22,6 +22,6 @@ pipeline {
         }
     }
     triggers {
-        pollSCM('* * * * *') // Verifica cambios cada minuto
+        pollSCM('0 * * * *') // Verifica cambios cada minuto
     }
 }
