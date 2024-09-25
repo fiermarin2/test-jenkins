@@ -16,7 +16,7 @@ pipeline {
         stage('Run container') {
             steps {
                 script {
-                    sh 'docker run -d --name my-container my-container'
+                    sh 'docker run -d -p 8000:8000 --name my-container my-container'
                 }
             }
         }
