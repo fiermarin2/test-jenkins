@@ -4,10 +4,10 @@ FROM node:14
 WORKDIR /app
 
 # Copiar los archivos de tu proyecto al contenedor
-COPY package*.json ./
+# COPY package*.json ./
 
 # Instalar las dependencias
-RUN npm install
+# RUN npm install
 
 # Copiar el resto del código de la aplicación al contenedor
 COPY . .
