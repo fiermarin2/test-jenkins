@@ -1,27 +1,72 @@
 pipeline {
     agent any
+
+    environment {
+        REPO_PATH = 'file:///C:/Users/Rodrigo/Documents/VisualStudio/viejo_jenkins'  // Ruta del repositorio local
+        CONTAINER_NAME = 'my-container'
+        IMAGE_NAME = 'my-container-image'
+        HOST_PORT = '8000'
+        CONTAINER_PORT = '8000'
+    }
+
     stages {
-        stage('Clone repository') {
+        // Clonar el repositorio desde una ruta local
+        stage('Clonar repositorio local') {
             steps {
-                git branch: 'main', url: 'https://github.com/fiermarin2/test-jenkins'
+                git "${REPO_PATH}"
             }
         }
-        stage('Build Docker container') {
+
+        // Construir la imagen Docker para la aplicación
+        stage('Construir imagen Docker') {
             steps {
                 script {
-                    sh 'docker build -t my-container .'
+                    echo 'Construyendo la imagen Docker para la aplicación...'
+                    sh "docker build -t ${IMAGE_NAME} ."
                 }
             }
         }
-        stage('Run container') {
+
+        // Detener y eliminar contenedores antiguos si existen
+        stage('Detener y eliminar contenedor anterior') {
             steps {
                 script {
-                    sh 'docker run -d -p 8000:8000 --name my-container my-container'
+                    echo 'Verificando si el contenedor de la aplicación está corriendo...'
+                    def isAppRunning = sh(script: "docker ps --filter 'name=${CONTAINER_NAME}' --filter 'status=running' -q", returnStdout: true).trim()
+                    if (isAppRunning) {
+                        echo 'El contenedor de la aplicación está corriendo. Deteniendo y eliminando...'
+                        sh "docker rm -f ${CONTAINER_NAME}"
+                    } else {
+                        echo 'El contenedor de la aplicación no está corriendo.'
+                    }
+                }
+            }
+        }
+
+        // Ejecutar nuevo contenedor de la aplicación
+        stage('Ejecutar nuevo contenedor de la aplicación') {
+            steps {
+                script {
+                    echo 'Ejecutando el nuevo contenedor de la aplicación...'
+                    sh "docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} --name ${CONTAINER_NAME} ${IMAGE_NAME}"
                 }
             }
         }
     }
+
+    post {
+        always {
+            echo 'Pipeline finalizado.'
+        }
+        success {
+            echo 'Pipeline ejecutado exitosamente.'
+        }
+        failure {
+            echo 'El pipeline falló.'
+        }
+    }
+
     triggers {
-        pollSCM('0 * * * *') // Verifica cambios cada minuto
+        pollSCM('H/1 * * * *') // Verifica los cambios en la carpeta local cada minuto
     }
 }
