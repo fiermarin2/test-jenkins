@@ -2,7 +2,7 @@ docker exec -u root -it jenkins bash
 apt-get update
 apt-get install -y docker.io
 
-Rodri
+Rodria
 
 -------------------------
 Entrar como root de nuevo para dar permiso al usuario jenkins para ejecutar docker y lo agregamos al grupo docker
