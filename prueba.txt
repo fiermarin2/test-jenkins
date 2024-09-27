@@ -1,1 +1,16 @@
-pruebaa
+docker exec -u root -it jenkins bash
+apt-get update
+apt-get install -y docker.io
+
+
+
+-------------------------
+Entrar como root de nuevo para dar permiso al usuario jenkins para ejecutar docker y lo agregamos al grupo docker
+
+docker exec -u root -it jenkins bash
+chown root:docker /var/run/docker.sock
+chmod 660 /var/run/docker.sock
+groupadd docker
+usermod -aG docker jenkins
+exit
+docker restart jenkins
