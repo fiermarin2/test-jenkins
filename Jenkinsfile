@@ -13,7 +13,7 @@ pipeline {
         // Clonar el repositorio desde una ruta local
         stage('Clonar repositorio local') {
             steps {
-                git "${REPO_PATH}"
+                git branch: 'main', url: "${REPO_PATH}"
             }
         }
 
