@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        REPO_PATH = 'file:///C:/Users/Rodrigo/Documents/VisualStudio/viejo_jenkins'  // Ruta del repositorio local
+        REPO_PATH = 'file:///var/jenkins_home/test-jenkins'  // Ruta del repositorio local
         CONTAINER_NAME = 'my-container'
         IMAGE_NAME = 'my-container-image'
         HOST_PORT = '8000'
