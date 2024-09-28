@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        REPO_PATH = 'file:///var/jenkins_home/test-jenkins'  // Ruta del repositorio local
-        CONTAINER_NAME = 'my-container'
-        IMAGE_NAME = 'my-container-image'
+        REPO_PATH = 'file:///var/jenkins_home/test-jenkins'
+        CONTAINER_NAME = 'contenedor-aplicacion'
+        IMAGE_NAME = 'imagen-aplicacion'
         HOST_PORT = '8000'
         CONTAINER_PORT = '8000'
     }
@@ -34,10 +34,8 @@ pipeline {
                     echo 'Verificando si el contenedor de la aplicación está corriendo...'
                     def isAppRunning = sh(script: "docker ps -a --filter 'name=${CONTAINER_NAME}' -q", returnStdout: true).trim()
                     if (isAppRunning) {
-                        echo 'El contenedor de la aplicación está corriendo. Deteniendo y eliminando...'
+                        echo 'El contenedor de la aplicación existe. Deteniendo y eliminando...'
                         sh "docker rm -f ${CONTAINER_NAME}"
-                    } else {
-                        echo 'El contenedor de la aplicación no está corriendo.'
                     }
                 }
             }
@@ -64,9 +62,5 @@ pipeline {
         failure {
             echo 'El pipeline falló.'
         }
-    }
-
-    triggers {
-        pollSCM('H/1 * * * *') // Verifica los cambios en la carpeta local cada minuto
     }
 }
