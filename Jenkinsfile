@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                     echo 'Verificando si el contenedor de la aplicación está corriendo...'
-                    def isAppRunning = sh(script: "docker ps --filter 'name=${CONTAINER_NAME}' --filter 'status=running' -q", returnStdout: true).trim()
+                    def isAppRunning = sh(script: "docker ps -a --filter 'name=${CONTAINER_NAME}' -q", returnStdout: true).trim()
                     if (isAppRunning) {
                         echo 'El contenedor de la aplicación está corriendo. Deteniendo y eliminando...'
                         sh "docker rm -f ${CONTAINER_NAME}"
